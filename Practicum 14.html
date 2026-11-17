@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CollabNest - Student Collaboration</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f6fc;
+    color: #24364b;
+    line-height: 1.6;
+}
+
+header {
+    background: #174a7e;
+    color: white;
+    padding: 18px;
+    text-align: center;
+}
+
+nav {
+    background: #0d345b;
+    padding: 12px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+    display: inline-block;
+}
+
+nav a:hover {
+    color: #a9d6ff;
+}
+
+section {
+    background: white;
+    margin: 20px auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 1100px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px #00000012;
+}
+
+h2 {
+    color: #174a7e;
+    margin-bottom: 15px;
+}
+
+h3 {
+    margin: 10px 0;
+}
+
+button {
+    background: #1769aa;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    margin: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0d345b;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 11px;
+    margin: 8px 0 14px;
+    border: 1px solid #b8c9d9;
+    border-radius: 6px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.card {
+    background: #e8f2fc;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.card h3 {
+    color: #174a7e;
+}
+
+.task-item {
+    background: #edf5fc;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 7px;
+    overflow-wrap: anywhere;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #e8f2fc;
+    color: #174a7e;
+    border: 1px solid #b8c9d9;
+}
+
+.option:hover {
+    background: #d2e8fa;
+    color: #174a7e;
+}
+
+.option:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+#feedback, #registerResult, #contactResult,
+#reminderStatus, #apiStatus {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+footer {
+    background: #174a7e;
+    color: white;
+    text-align: center;
+    padding: 18px;
+    margin-top: 25px;
+}
+
+@media (max-width: 768px) {
+    .card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    nav a {
+        margin: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+
+    section {
+        width: 94%;
+        padding: 17px;
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>CollabNest</h1>
+    <p>Connect. Collaborate. Create.</p>
+    <p id="clock"></p>
+</header>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#features">Features</a>
+    <a href="#register">Register</a>
+    <a href="#tasks">Tasks</a>
+    <a href="#api">API Workspace</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#activity">Activity</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<!-- HOME -->
+<section id="home">
+    <h2 id="welcome">Welcome to CollabNest!</h2>
+    <p>
+        CollabNest is a student collaboration platform where students
+        can connect, manage tasks, share ideas and learn together.
+    </p>
+    <button onclick="showWelcome()">Click Here</button>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+    <h2>Our Features</h2>
+
+    <div class="card-container">
+        <div class="card">
+            <h3>Team Collaboration</h3>
+            <p>Work together and share ideas.</p>
+        </div>
+
+        <div class="card">
+            <h3>Task Management</h3>
+            <p>Organise and track your tasks.</p>
+        </div>
+
+        <div class="card">
+            <h3>Learning Quiz</h3>
+            <p>Test your Web Technology knowledge.</p>
+        </div>
+
+        <div class="card">
+            <h3>API Workspace</h3>
+            <p>Explore API operations.</p>
+        </div>
+
+        <div class="card">
+            <h3>Reminders</h3>
+            <p>Remember important activities.</p>
+        </div>
+
+        <div class="card">
+            <h3>Activity Tracker</h3>
+            <p>Track your study sessions.</p>
+        </div>
+    </div>
+</section>
+
+<!-- REGISTRATION -->
+<section id="register">
+    <h2>Student Registration</h2>
+
+    <form id="registerForm">
+        <label>Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+
+        <label>Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+
+        <label>Phone Number</label>
+        <input type="tel" id="phone" placeholder="10 digit phone number"
+        pattern="[0-9]{10}" required>
+
+        <label>Team Name</label>
+        <input type="text" id="team" placeholder="Enter team name" required>
+
+        <label>Team Size</label>
+        <input type="number" id="size" min="1" max="20"
+        placeholder="Enter team size" required>
+
+        <label>Project Description</label>
+        <textarea id="description" placeholder="Describe your project"
+        required></textarea>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p id="registerResult"></p>
+</section>
+
+<!-- TASK MANAGER -->
+<section id="tasks">
+    <h2>Task Manager</h2>
+
+    <input type="text" id="taskInput" placeholder="Enter a task">
+
+    <button onclick="addTask()">Add Task</button>
+
+    <h3>Your Tasks</h3>
+    <p id="taskCount">Total Tasks: 0</p>
+
+    <div id="taskList"></div>
+</section>
+
+<!-- API WORKSPACE -->
+<section id="api">
+    <h2>API Workspace</h2>
+
+    <p>Explore GET, POST, PATCH and DELETE operations.</p>
+
+    <button onclick="loadTasks()">GET - Load Tasks</button>
+
+    <form id="apiForm">
+        <input type="text" id="apiTitle"
+        placeholder="Enter a new API task" required>
+
+        <button type="submit">POST - Add Task</button>
+    </form>
+
+    <button onclick="apiAction('PATCH')">PATCH - Update First Task</button>
+
+    <button onclick="apiAction('DELETE')">DELETE - Delete First Task</button>
+
+    <p id="apiStatus"></p>
+    <div id="apiTasks"></div>
+</section>
+
+<!-- WEB TECHNOLOGY QUIZ -->
+<section id="quiz">
+    <h2>Web Technology Quiz</h2>
+
+    <p>Test your knowledge of HTML, CSS, JavaScript and APIs!</p>
+
+    <h3 id="questionNumber">Question 1</h3>
+
+    <p id="questionText"></p>
+
+    <div id="options"></div>
+
+    <p id="feedback"></p>
+
+    <p id="quizScore">Score: 0</p>
+
+    <button id="nextButton" onclick="nextQuestion()">Next</button>
+
+    <button onclick="restartQuiz()">Restart Quiz</button>
+</section>
+
+<!-- REMINDER AND ACTIVITY -->
+<section id="activity">
+    <h2>Study Reminder</h2>
+
+    <input type="number" id="reminder" min="1"
+    placeholder="Enter reminder time in seconds">
+
+    <button onclick="setReminder()">Set Reminder</button>
+    <button onclick="cancelReminder()">Cancel Reminder</button>
+
+    <p id="reminderStatus"></p>
+
+    <hr>
+
+    <h2>Activity Tracker</h2>
+
+    <p id="activityMessage">Your study session has not started.</p>
+
+    <button onclick="startActivity()">Start Activity</button>
+    <button onclick="stopActivity()">Stop Activity</button>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <h2>Contact Us</h2>
+
+    <form id="contactForm">
+        <label>Your Name</label>
+        <input type="text" id="contactName"
+        placeholder="Enter your name" required>
+
+        <label>Your Message</label>
+        <textarea id="contactMessage"
+        placeholder="Enter your message" required></textarea>
+
+        <button type="submit">Send Message</button>
+    </form>
+
+    <p id="contactResult"></p>
+</section>
+
+<footer>
+    <p>© 2026 CollabNest | Student Collaboration Platform</p>
+</footer>
+
+<script>
+
+// LIVE CLOCK
+function updateClock() {
+    document.querySelector("#clock").textContent =
+        new Date().toLocaleString();
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+
+// WELCOME BUTTON
+function showWelcome() {
+    document.querySelector("#welcome").textContent =
+        "Welcome! Let's collaborate and learn together!";
+}
+
+
+// REGISTRATION FORM
+document.querySelector("#registerForm").onsubmit = function(event) {
+    event.preventDefault();
+
+    let phone = document.querySelector("#phone").value;
+    let size = Number(document.querySelector("#size").value);
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+        document.querySelector("#registerResult").textContent =
+            "Please enter a valid 10 digit phone number.";
+        return;
+    }
+
+    if (size < 1 || size > 20) {
+        document.querySelector("#registerResult").textContent =
+            "Team size must be between 1 and 20.";
+        return;
+    }
+
+    let name = document.querySelector("#name").value;
+
+    document.querySelector("#registerResult").textContent =
+        "Welcome " + name + "! Registration successful.";
+
+    this.reset();
+};
+
+
+// TASK MANAGER
+let tasks = [];
+
+function displayTasks() {
+    let list = document.querySelector("#taskList");
+    list.innerHTML = "";
+
+    tasks.forEach(function(task, index) {
+        let item = document.createElement("div");
+        item.className = "task-item";
+
+        let name = document.createElement("span");
+        name.textContent = task.text + " ";
+        if (task.done) {
+            name.classList.add("completed");
+        }
+
+        let completeButton = document.createElement("button");
+        completeButton.textContent = task.done ? "Undo" : "Complete";
+        completeButton.onclick = function() {
+            tasks[index].done = !tasks[index].done;
+            displayTasks();
+        };
+
+        let editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.onclick = function() {
+            let updated = prompt("Edit your task:", task.text);
+
+            if (updated && updated.trim() !== "") {
+                tasks[index].text = updated.trim();
+                displayTasks();
+            }
+        };
+
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.onclick = function() {
+            tasks.splice(index, 1);
+            displayTasks();
+        };
+
+        item.append(name, completeButton, editButton, deleteButton);
+        list.appendChild(item);
+    });
+
+    document.querySelector("#taskCount").textContent =
+        "Total Tasks: " + tasks.length;
+}
+
+function addTask() {
+    let input = document.querySelector("#taskInput");
+    let value = input.value.trim();
+
+    if (value === "") {
+        alert("Please enter a task!");
+        return;
+    }
+
+    tasks.push({text: value, done: false});
+    input.value = "";
+    displayTasks();
+}
+
+
+// API WORKSPACE
+const API = "https://jsonplaceholder.typicode.com/todos";
+
+function status(message) {
+    document.querySelector("#apiStatus").textContent = message;
+}
+
+function loadTasks() {
+    fetch(API + "?_limit=5")
+    .then(response => {
+        if (!response.ok) throw new Error("Could not load tasks");
+        return response.json();
+    })
+    .then(data => {
+        let output = document.querySelector("#apiTasks");
+        output.innerHTML = "";
+
+        data.forEach(task => {
+            let item = document.createElement("p");
+            item.className = "task-item";
+            item.textContent = task.title;
+            output.appendChild(item);
+        });
+
+        status("GET successful! Tasks loaded.");
+    })
+    .catch(error => status("Error: " + error.message));
+}
+
+document.querySelector("#apiForm").onsubmit = function(event) {
+    event.preventDefault();
+
+    let title = document.querySelector("#apiTitle").value.trim();
+
+    if (title === "") return;
+
+    fetch(API, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({title: title, completed: false})
+    })
+    .then(response => response.json())
+    .then(data => {
+        status("POST successful! New task ID: " + data.id);
+        document.querySelector("#apiTitle").value = "";
+    })
+    .catch(error => status("Error: " + error.message));
+};
+
+function apiAction(method) {
+    let id = 1;
+
+    fetch(API + "/" + id, {
+        method: method,
+        headers: {"Content-Type": "application/json"},
+        body: method === "PATCH" ?
+            JSON.stringify({completed: true}) : undefined
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Request failed");
+        return response.json();
+    })
+    .then(() => {
+        status(method + " request successful!");
+    })
+    .catch(error => status("Error: " + error.message));
+}
+
+
+// WEB TECHNOLOGY QUIZ
+const questions = [
+    {
+        q: "Which HTML tag creates a hyperlink?",
+        o: ["<link>", "<a>", "<href>", "<p>"],
+        a: 1
+    },
+    {
+        q: "Which CSS property changes text colour?",
+        o: ["background-color", "color", "font-style", "margin"],
+        a: 1
+    },
+    {
+        q: "Which JavaScript method selects the first matching CSS selector?",
+        o: ["getElementById()", "querySelector()", "innerHTML", "alert()"],
+        a: 1
+    },
+    {
+        q: "Which attribute runs JavaScript when a button is clicked?",
+        o: ["href", "src", "onclick", "class"],
+        a: 2
+    },
+    {
+        q: "Which HTML tag is used to create a form?",
+        o: ["<section>", "<form>", "<footer>", "<table>"],
+        a: 1
+    },
+    {
+        q: "Which property can change the text inside an HTML element?",
+        o: ["textContent", "font-family", "border", "margin"],
+        a: 0
+    },
+    {
+        q: "What does setInterval() do?",
+        o: [
+            "Runs a function once",
+            "Repeats a function at intervals",
+            "Deletes an element",
+            "Creates a form"
+        ],
+        a: 1
+    },
+    {
+        q: "What is the purpose of a CSS media query?",
+        o: [
+            "Connect to an API",
+            "Create a JavaScript function",
+            "Make a responsive layout",
+            "Create a hyperlink"
+        ],
+        a: 2
+    },
+    {
+        q: "Which method cancels a pending setTimeout()?",
+        o: ["clearTimeout()", "clearInterval()", "stopTimer()", "cancel()"],
+        a: 0
+    },
+    {
+        q: "Which HTTP method is generally used to retrieve API data?",
+        o: ["POST", "DELETE", "PATCH", "GET"],
+        a: 3
+    }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function showQuestion() {
+    answered = false;
+
+    let question = questions[current];
+
+    document.querySelector("#questionNumber").textContent =
+        "Question " + (current + 1) + " of " + questions.length;
+
+    document.querySelector("#questionText").textContent = question.q;
+
+    document.querySelector("#feedback").textContent = "";
+
+    document.querySelector("#quizScore").textContent =
+        "Score: " + score;
+
+    let options = document.querySelector("#options");
+    options.innerHTML = "";
+
+    question.o.forEach(function(option, index) {
+        let button = document.createElement("button");
+
+        button.className = "option";
+        button.textContent = option;
+
+        button.onclick = function() {
+            checkAnswer(index);
+        };
+
+        options.appendChild(button);
+    });
+
+    document.querySelector("#nextButton").disabled = true;
+}
+
+function checkAnswer(selected) {
+    if (answered) return;
+
+    answered = true;
+
+    let correct = questions[current].a;
+    let buttons = document.querySelectorAll(".option");
+
+    if (selected === correct) {
+        score++;
+        document.querySelector("#feedback").textContent =
+            "Correct! Well done!";
+    } else {
+        document.querySelector("#feedback").textContent =
+            "Incorrect! Correct answer: " +
+            questions[current].o[correct];
+    }
+
+    buttons.forEach(function(button) {
+        button.disabled = true;
+    });
+
+    document.querySelector("#quizScore").textContent =
+        "Score: " + score;
+
+    document.querySelector("#nextButton").disabled = false;
+}
+
+function nextQuestion() {
+    if (!answered) {
+        document.querySelector("#feedback").textContent =
+            "Please select an answer first!";
+        return;
+    }
+
+    current++;
+
+    if (current < questions.length) {
+        showQuestion();
+    } else {
+        document.querySelector("#questionNumber").textContent =
+            "Quiz Completed!";
+
+        document.querySelector("#questionText").textContent =
+            "You have completed the Web Technology Quiz!";
+
+        document.querySelector("#options").innerHTML = "";
+
+        document.querySelector("#feedback").textContent =
+            "Your final score is " + score + " out of " +
+            questions.length + ".";
+
+        document.querySelector("#nextButton").disabled = true;
+    }
+}
+
+function restartQuiz() {
+    current = 0;
+    score = 0;
+    showQuestion();
+}
+
+showQuestion();
+
+
+// REMINDER USING setTimeout AND clearTimeout
+let reminderTimer;
+
+function setReminder() {
+    let seconds = Number(document.querySelector("#reminder").value);
+
+    if (!Number.isInteger(seconds) || seconds <= 0) {
+        document.querySelector("#reminderStatus").textContent =
+            "Enter a valid number of seconds.";
+        return;
+    }
+
+    clearTimeout(reminderTimer);
+
+    document.querySelector("#reminderStatus").textContent =
+        "Reminder set for " + seconds + " seconds.";
+
+    reminderTimer = setTimeout(function() {
+        alert("Reminder! Time to check your work!");
+        document.querySelector("#reminderStatus").textContent =
+            "Your reminder is complete!";
+    }, seconds * 1000);
+}
+
+function cancelReminder() {
+    clearTimeout(reminderTimer);
+
+    document.querySelector("#reminderStatus").textContent =
+        "Reminder cancelled.";
+}
+
+
+// ACTIVITY USING setInterval AND clearInterval
+let activityTimer;
+let count = 0;
+
+function startActivity() {
+    if (activityTimer) return;
+
+    activityTimer = setInterval(function() {
+        count++;
+
+        document.querySelector("#activityMessage").textContent =
+            "Study session running: " + count + " seconds";
+    }, 1000);
+}
+
+function stopActivity() {
+    clearInterval(activityTimer);
+    activityTimer = null;
+
+    document.querySelector("#activityMessage").textContent =
+        "Activity stopped. Total time: " + count + " seconds.";
+}
+
+
+// CONTACT FORM
+document.querySelector("#contactForm").onsubmit = function(event) {
+    event.preventDefault();
+
+    let name = document.querySelector("#contactName").value;
+
+    document.querySelector("#contactResult").textContent =
+        "Thank you, " + name + "! Your message has been received.";
+
+    this.reset();
+};
+
+</script>
+
+</body>
+</html>
